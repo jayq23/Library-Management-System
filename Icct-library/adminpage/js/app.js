@@ -1,7 +1,5 @@
 
-// =============================
 // INITIALIZATION & SESSION CHECK
-// =============================
 
 const body = document.querySelector("body");
 const sidebar = body.querySelector(".sidebar");
@@ -22,92 +20,96 @@ function checkUserSession() {
     return JSON.parse(user);
 }
 
-// =============================
 // GLOBAL DATA (from API)
-// =============================
 
 let books = [];
 let borrowers = [];
 
 function loadDataFromAPI() {
     return Promise.all([
-        fetch(`${API_URL}/books`).then(r => r.json()).then(data => { books = data; }),
-        fetch(`${API_URL}/borrowers`).then(r => r.json()).then(data => { borrowers = data; })
+        fetch(`${API_URL}/books`).then(r => r.json()).then(data => { 
+            books = Array.isArray(data) ? data : (data.data || []); 
+        }),
+        fetch(`${API_URL}/borrowers`).then(r => r.json()).then(data => { 
+            borrowers = Array.isArray(data) ? data : (data.data || []); 
+        })
     ]).catch(err => {
         console.error('Error loading data:', err);
-        alert('Error connecting to backend. Make sure server is running on port 5000');
+        books = [];
+        borrowers = [];
     });
 }
 
-// =============================
+
 // SPA NAVIGATION
-// =============================
 
 document.addEventListener("DOMContentLoaded", () => {
     checkUserSession();
     
-    // Load data from API then initialize
-    loadDataFromAPI().then(() => {
-        const mainContent = document.getElementById("main-content");
-        const links = document.querySelectorAll(".nav-link a");
+    const mainContent = document.getElementById("main-content");
+    const links = document.querySelectorAll(".nav-link a");
 
-        function loadPage(page) {
-            fetch("pages/" + page + ".html")
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Page not found");
-                    }
-                    return response.text();
-                })
-                .then(data => {
-                    mainContent.innerHTML = data;
+    function loadPage(page) {
+        // Show loading state immediately
+        mainContent.innerHTML = "<h2>Loading...</h2>";
+        
+        fetch("./pages/" + page + ".html")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Page not found");
+                }
+                return response.text();
+            })
+            .then(data => {
+                mainContent.innerHTML = data;
 
-                    // AUTO INITIALIZE DEPENDING ON PAGE
-                    switch(page) {
-                        case "dashboard":
-                            initDashboard();
-                            break;
-                        case "manage-books":
-                            renderBooks();
-                            break;
-                        case "borrowers":
-                            initBorrowers();
-                            break;
-                        case "borrowed-books":
-                            initBorrowedBooks();
-                            break;
-                        case "returned-books":
-                            initReturnedBooks();
-                            break;
-                        case "reports":
-                            initReports();
-                            break;
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                    mainContent.innerHTML = "<h2>Error loading page</h2>";
-                });
-        }
-
-        // Attach click events
-        links.forEach(link => {
-            link.addEventListener("click", function (e) {
-                e.preventDefault();
-                const page = this.getAttribute("data-page");
-                loadPage(page);
+                // AUTO INITIALIZE DEPENDING ON PAGE
+                switch(page) {
+                    case "dashboard":
+                        initDashboard();
+                        break;
+                    case "manage-books":
+                        renderBooks();
+                        break;
+                    case "borrowers":
+                        initBorrowers();
+                        break;
+                    case "borrowed-books":
+                        initBorrowedBooks();
+                        break;
+                    case "returned-books":
+                        initReturnedBooks();
+                        break;
+                    case "reports":
+                        initReports();
+                        break;
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                mainContent.innerHTML = "<h2>Error loading page</h2><p>" + error.message + "</p>";
             });
-        });
+    }
 
-        // Default page
-        loadPage("dashboard");
+    // Attach click events
+    links.forEach(link => {
+        link.addEventListener("click", function (e) {
+            e.preventDefault();
+            const page = this.getAttribute("data-page");
+            loadPage(page);
+        });
     });
+
+    // Load data from API in background while showing dashboard
+    loadDataFromAPI().catch(err => {
+        console.error('Error loading data:', err);
+    });
+
+    // Default page
+    loadPage("dashboard");
 });
 
-// =============================
 // DASHBOARD 
-// =============================
-
 function initDashboard() {
     const totalBooks = document.getElementById('totalBooks');
     const borrowedBooks = document.getElementById('borrowedBooks');
@@ -134,9 +136,8 @@ function initDashboard() {
         });
 }
 
-// =============================
+
 // MANAGE BOOKS 
-// =============================
 
 function renderBooks() {
     const bookTable = document.getElementById('book-table');
@@ -167,9 +168,7 @@ function renderBooks() {
     initDashboard();
 }
 
-// =============================
 // BORROWED BOOKS
-// =============================
 
 function initBorrowedBooks() {
     const table = document.getElementById('borrowed-book-table');
@@ -204,9 +203,8 @@ function initBorrowedBooks() {
     });
 }
 
-// =============================
+
 // RETURNED BOOKS
-// =============================
 
 function initReturnedBooks() {
     const table = document.getElementById('returned-book-table');
@@ -240,9 +238,7 @@ function initReturnedBooks() {
     });
 }
 
-// =============================
 // BORROWERS
-// =============================
 
 function initBorrowers() {
     const table = document.getElementById('borrowers-table');
@@ -269,9 +265,8 @@ function initBorrowers() {
     });
 }
 
-// =============================
+
 // REPORTS
-// =============================
 
 function initReports() {
     const booksBorrowedMonth = document.getElementById('booksBorrowedMonth');
@@ -386,9 +381,8 @@ document.body.addEventListener('submit', function (e) {
     }
 });
 
-// =============================
+
 // LOGOUT HANDLER
-// =============================
 
 function handleLogout(e) {
     e.preventDefault();
