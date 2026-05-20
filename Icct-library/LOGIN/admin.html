@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard</title>
+<style>
+body{margin:0;font-family:Arial;background:#f3f4f6;}
+.navbar{
+    background:linear-gradient(to right,#3f2b96,#1e3c72);
+    color:white;
+    display:flex;
+    justify-content:space-between;
+    padding:15px 30px;
+}
+.sidebar{
+    width:200px;
+    background:#1e3c72;
+    color:white;
+    height:100vh;
+    position:fixed;
+    padding-top:20px;
+}
+.sidebar a{
+    display:block;
+    color:white;
+    padding:10px 20px;
+    text-decoration:none;
+}
+.sidebar a:hover{
+    background:#3f2b96;
+}
+.content{
+    margin-left:220px;
+    padding:30px;
+}
+.cards{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+.card{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 4px 8px rgba(0,0,0,0.1);
+}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+    <h2>Admin Panel</h2>
+    <div>
+        <span id="adminName"></span> |
+        <span id="adminNo"></span>
+    </div>
+</div>
+
+<div class="sidebar">
+    <a href="#">Dashboard</a>
+    <a href="#">Books</a>
+    <a href="#">Borrowers</a>
+    <a href="#">Transactions</a>
+    <a href="#">Reports</a>
+</div>
+
+<div class="content">
+    <div class="cards">
+        <div class="card">
+            <h3>Total Books</h3>
+            <h1>1200</h1>
+        </div>
+        <div class="card">
+            <h3>Total Students</h3>
+            <h1>350</h1>
+        </div>
+        <div class="card">
+            <h3>Borrowed Today</h3>
+            <h1>15</h1>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById("adminName").innerText =
+localStorage.getItem("name");
+
+document.getElementById("adminNo").innerText =
+localStorage.getItem("studentNo");
+</script>
+
+</body>
+</html>

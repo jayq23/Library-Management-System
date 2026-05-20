@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard</title>
+  <link rel="stylesheet" href="css/student.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+  <nav class="sidebar close">
+    <header>
+      <div class="image-text">
+        <span class="image"><img src="logo.png" alt="logo"></span>
+        <div class="text header-text">
+          <span class="name">Library</span>
+          <span class="profession">User</span>
+        </div>
+      </div>
+      <i class='bx bxs-right-arrow toggle'></i>
+    </header>
+
+    <div class="menu-bar">
+      <div class="menu">
+        <ul class="menu-links">
+          <li class="nav-link">
+            <a href="#" data-page="user-dashboard">
+              <i class='bx bx-home icons'></i>
+              <span class="text nav-text">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-link">
+            <a href="#" data-page="borrow-books">
+              <i class='bx bx-book-add icons'></i>
+              <span class="text nav-text">Borrow Books</span>
+            </a>
+          </li>
+          <li class="nav-link">
+            <a href="#" data-page="my-borrowed">
+              <i class='bx bx-book icons'></i>
+              <span class="text nav-text">My Borrowed</span>
+            </a>
+          </li>
+          <li class="nav-link">
+            <a href="#" data-page="my-account">
+              <i class='bx bx-user icons'></i>
+              <span class="text nav-text">My Account</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="button-content">
+        <li>
+          <a href="#" id="logoutBtn" onclick="handleLogout(event)">
+            <i class="bx bx-log-out icons"></i>
+            <span class="text nav-text">Logout</span>
+          </a>
+        </li>
+      </div>
+    </div>
+  </nav>
+
+  <section class="home">
+    <div id="main-content">
+        
+    </div>
+  </section>
+
+  <script src="js/appp.js"></script>
+</body>
+</html>
