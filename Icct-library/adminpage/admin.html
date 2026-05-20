@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+
+    <link rel="stylesheet" href="css/styles.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <nav class="sidebar close">
+        <header>
+            <div class="image-text">
+                <span class="image">
+                    <img src="logo.png" alt="logo">  
+                </span>
+                <div class="text header-text">
+                    <span class="name">Library</span>
+                    <span class="profession">Admin</span>
+                </div>
+            </div>
+            <i class='bx bxs-right-arrow toggle'></i>
+        </header>
+
+        <div class="menu-bar">
+            <div class="menu">
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="#" data-page="dashboard">
+                            <i class='bx bx-home icons'></i>
+                            <span class="text nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="#" data-page="manage-books">
+                            <i class='bx bx-book icons'></i>
+                            <span class="text nav-text">Manage Books</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="#" data-page="borrowers">
+                            <i class='bx bx-user icons'></i>
+                            <span class="text nav-text">Borrowers</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="#" data-page="borrowed-books">
+                            <i class='bx bx-transfer icons'></i>
+                            <span class="text nav-text">Borrowed Books</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="#" data-page="returned-books">
+                            <i class='bx bx-check-circle icons'></i>
+                            <span class="text nav-text">Returned Books</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="#" data-page="reports">
+                            <i class='bx bx-bar-chart icons'></i>
+                            <span class="text nav-text">Reports</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="button-content">
+                <li>
+                    <a href="#" id="logoutBtn" onclick="handleLogout(event)">
+                        <i class="bx bx-log-out icons"></i>
+                        <span class="text nav-text">Logout</span>
+                    </a>
+                </li>
+            </div>
+        </div>
+    </nav>
+
+    <section class="home">
+        <div id="main-content">
+        </div>
+    </section>
+    <hr>
+
+    <script src="js/app.js" defer></script>
+
+</body>
+</html>
