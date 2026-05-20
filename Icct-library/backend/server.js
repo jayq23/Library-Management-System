@@ -12,10 +12,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// ========================================
-// MONGODB CONNECTION
-// ========================================
 
+// MONGODB CONNECTION
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/library-system';
 
 let isMongoConnected = false;
@@ -75,10 +73,8 @@ const User = mongoose.model('User', userSchema);
 const Book = mongoose.model('Book', bookSchema);
 const Borrower = mongoose.model('Borrower', borrowerSchema);
 
-// ========================================
-// IN-MEMORY FALLBACK STORAGE (for development without MongoDB)
-// ========================================
 
+// IN-MEMORY FALLBACK STORAGE (for development without MongoDB)
 // In-memory storage
 const inMemoryStore = {
     users: [],
@@ -199,10 +195,7 @@ const dbOps = {
     }
 };
 
-// ========================================
 // USER ENDPOINTS (AUTHENTICATION)
-// ========================================
-
 // Register user
 app.post('/api/auth/register', async (req, res) => {
     try {
@@ -260,10 +253,8 @@ app.post('/api/auth/login', async (req, res) => {
     }
 });
 
-// ========================================
-// BOOK ENDPOINTS
-// ========================================
 
+// BOOK ENDPOINTS
 // Get all books
 app.get('/api/books', async (req, res) => {
     try {
@@ -340,10 +331,8 @@ app.delete('/api/books/:id', async (req, res) => {
     }
 });
 
-// ========================================
-// BORROWER ENDPOINTS
-// ========================================
 
+// BORROWER ENDPOINTS
 // Get all borrowers
 app.get('/api/borrowers', async (req, res) => {
     try {
@@ -377,10 +366,8 @@ app.post('/api/borrowers', async (req, res) => {
     }
 });
 
-// ========================================
-// BORROW/RETURN ENDPOINTS
-// ========================================
 
+// BORROW/RETURN ENDPOINTS
 // Borrow book
 app.post('/api/books/:id/borrow', async (req, res) => {
     try {
@@ -441,10 +428,8 @@ app.post('/api/books/:id/return', async (req, res) => {
     }
 });
 
-// ========================================
-// DASHBOARD STATS
-// ========================================
 
+// DASHBOARD STATS
 app.get('/api/stats', async (req, res) => {
     try {
         const books = await Book.find();
@@ -468,18 +453,15 @@ app.get('/api/stats', async (req, res) => {
     }
 });
 
-// ========================================
+
 // HEALTH CHECK
-// ========================================
 
 app.get('/api/health', (req, res) => {
     res.json({ status: 'Backend is running', port: PORT, database: 'MongoDB Atlas' });
 });
 
-// ========================================
-// START SERVER
-// ========================================
 
+// START SERVER
 app.listen(PORT, () => {
     console.log(`\n🚀 Backend server running on http://localhost:${PORT}`);
     console.log(`📚 API Health: http://localhost:${PORT}/api/health`);

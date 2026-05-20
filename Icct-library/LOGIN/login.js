@@ -1,6 +1,5 @@
-// ========================================
+
 // LOGIN & REGISTRATION FORM HANDLERS
-// ========================================
 
 function showLogin(){
     document.getElementById("mainButtons").style.display="none";
@@ -10,7 +9,10 @@ function showLogin(){
         <form id="loginForm">
             <h2>Login</h2>
             <input type="email" id="loginEmail" placeholder="Enter Email" required>
-            <input type="password" id="loginPassword" placeholder="Enter Password" required>
+            <div class="password-wrapper">
+                <input type="password" id="loginPassword" placeholder="Enter Password" required>
+                <i class='bx bx-hide toggle-password' onclick="togglePasswordVisibility('loginPassword')"></i>
+            </div>
             <select id="loginRole" required>
                 <option value="">--Select Role--</option>
                 <option value="admin">Admin</option>
@@ -33,7 +35,10 @@ function showSignup(){
             <h2>Sign Up</h2>
             <input type="text" id="signupName" placeholder="Full Name" required>
             <input type="email" id="signupEmail" placeholder="Enter Email" required>
-            <input type="password" id="signupPassword" placeholder="Enter Password" required>
+            <div class="password-wrapper">
+                <input type="password" id="signupPassword" placeholder="Enter Password" required>
+                <i class='bx bx-hide toggle-password' onclick="togglePasswordVisibility('signupPassword')"></i>
+            </div>
             <select id="signupRole" required>
                 <option value="">--Select Role--</option>
                 <option value="user">User</option>
@@ -47,14 +52,23 @@ function showSignup(){
     document.getElementById("signupForm").addEventListener("submit", handleSignup);
 }
 
-function goBack(){
-    document.getElementById("formOverlay").style.display="none";
-    document.getElementById("mainButtons").style.display="block";
+function togglePasswordVisibility(inputId) {
+    const input = document.getElementById(inputId);
+    const icon = event.target;
+    
+    if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("bx-hide");
+        icon.classList.add("bx-show");
+    } else {
+        input.type = "password";
+        icon.classList.remove("bx-show");
+        icon.classList.add("bx-hide");
+    }
 }
 
-// ========================================
+
 // LOGIN HANDLER
-// ========================================
 
 function handleLogin(e) {
     e.preventDefault();
@@ -114,9 +128,7 @@ function handleLogin(e) {
     });
 }
 
-// ========================================
 // SIGNUP HANDLER
-// ========================================
 
 function handleSignup(e) {
     e.preventDefault();

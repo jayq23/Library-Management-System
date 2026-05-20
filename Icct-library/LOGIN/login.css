@@ -138,6 +138,33 @@ body{
     color: #000;
 }
 
+/* PASSWORD WRAPPER */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-wrapper input {
+    width: 100% !important;
+    padding-right: 40px;
+    margin: 8px 0;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 20px;
+    color: #2b2ba0;
+    user-select: none;
+}
+
+.toggle-password:hover {
+    color: #1c1c5c;
+}
+
 .form-box input[type="submit"]{
     background:#2b2ba0;
     color:white;

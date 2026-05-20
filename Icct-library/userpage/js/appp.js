@@ -7,9 +7,7 @@ toggle.addEventListener("click", () =>{
     sidebar.classList.toggle("close");
 });
 
-// ========================================
 // GLOBAL DATA & SIDEBAR
-// ========================================
 
 const links = document.querySelectorAll(".nav-link a");
 const mainContent = document.getElementById("main-content");
@@ -30,12 +28,12 @@ window.addEventListener("DOMContentLoaded", () => {
     loadPage("user-dashboard");
 });
 
-// ========================================
 // PAGE LOADER WITH SCRIPT INITIALIZATION
-// ========================================
 
 function loadPage(page) {
-    fetch("pages/" + page + ".html")
+    mainContent.innerHTML = "<h2>Loading...</h2>";
+    
+    fetch("./pages/" + page + ".html")
         .then(response => {
             if (!response.ok) {
                 throw new Error("Page not found");
@@ -50,46 +48,108 @@ function loadPage(page) {
         })
         .catch(error => {
             console.error(error);
-            mainContent.innerHTML = "<h2>Error loading page</h2>";
+            mainContent.innerHTML = "<h2>Error loading page</h2><p>" + error.message + "</p>";
         });
 }
 
 function loadPageScript(page) {
-    const scripts = {
-        "user-dashboard": "js/user-dashboard.js",
-        "borrow-books": "js/borrow-books.js",
-        "my-borrowed": "js/my-borrowed.js",
-        "my-account": "js/user-page-loader.js"
-    };
-    
-    const scriptPath = scripts[page];
-    if (!scriptPath) return;
-    
-    // Remove old script if exists
-    const oldScript = document.querySelector('script[data-page-script]');
-    if (oldScript) oldScript.remove();
-    
-    // Load new script
-    const script = document.createElement('script');
-    script.src = scriptPath;
-    script.setAttribute('data-page-script', page);
-    script.onload = () => {
-        if (page === "user-dashboard" && typeof initDashboard === "function") {
-            initDashboard();
-        } else if (page === "borrow-books" && typeof initBorrowBooks === "function") {
-            initBorrowBooks();
-        } else if (page === "my-borrowed" && typeof initMyBorrowed === "function") {
-            initMyBorrowed();
-        } else if (page === "my-account" && typeof initMyAccount === "function") {
-            initMyAccount();
-        }
-    };
-    document.body.appendChild(script);
+    // Initialize page-specific functions
+    if (page === "user-dashboard" && typeof initDashboard === "function") {
+        initDashboard();
+    } else if (page === "borrow-books" && typeof initBorrowBooks === "function") {
+        initBorrowBooks();
+    } else if (page === "my-borrowed" && typeof initMyBorrowed === "function") {
+        initMyBorrowed();
+    } else if (page === "my-account" && typeof initMyAccount === "function") {
+        initMyAccount();
+    }
 }
 
 // ========================================
-// NAVIGATION HANDLERS
+// PAGE INITIALIZATION FUNCTIONS
 // ========================================
+
+function initDashboard() {
+    const user = JSON.parse(sessionStorage.getItem("currentUser") || "{}");
+    const dashboardTitle = document.querySelector("h2");
+    if (dashboardTitle) {
+        dashboardTitle.innerText = `Welcome, ${user.name || 'User'}!`;
+    }
+}
+
+function initBorrowBooks() {
+    // Borrow books page initialization
+    const bookList = document.getElementById("available-books");
+    if (bookList) {
+        fetch(`${API_URL}/books`)
+            .then(r => r.json())
+            .then(books => {
+                const availableBooks = Array.isArray(books) ? books.filter(b => b.status === "Available") : [];
+                if (availableBooks.length === 0) {
+                    bookList.innerHTML = "<p>No books available</p>";
+                } else {
+                    bookList.innerHTML = availableBooks.map(book => `
+                        <div class="book-card">
+                            <h3>${book.title}</h3>
+                            <p>Author: ${book.author}</p>
+                            <p>Category: ${book.category}</p>
+                            <button onclick="borrowBook('${book.id}')">Borrow</button>
+                        </div>
+                    `).join('');
+                }
+            })
+            .catch(err => console.error('Error loading books:', err));
+    }
+}
+
+function initMyBorrowed() {
+    // My borrowed books page initialization
+    const user = JSON.parse(sessionStorage.getItem("currentUser") || "{}");
+    const borrowedList = document.getElementById("borrowed-list");
+    if (borrowedList) {
+        fetch(`${API_URL}/books`)
+            .then(r => r.json())
+            .then(books => {
+                const borrowed = Array.isArray(books) ? books.filter(b => b.borrower === user.email) : [];
+                if (borrowed.length === 0) {
+                    borrowedList.innerHTML = "<p>No borrowed books</p>";
+                } else {
+                    borrowedList.innerHTML = borrowed.map(book => `
+                        <div class="book-card">
+                            <h3>${book.title}</h3>
+                            <p>Due Date: ${book.dueDate}</p>
+                            <button onclick="returnBook('${book.id}')">Return</button>
+                        </div>
+                    `).join('');
+                }
+            })
+            .catch(err => console.error('Error loading borrowed books:', err));
+    }
+}
+
+function initMyAccount() {
+    const user = JSON.parse(sessionStorage.getItem("currentUser") || "{}");
+    
+    const nameEl = document.getElementById("user-name");
+    const emailEl = document.getElementById("user-email");
+    const roleEl = document.getElementById("user-role");
+
+    if (nameEl) nameEl.innerText = user.name || "N/A";
+    if (emailEl) emailEl.innerText = user.email || "N/A";
+    if (roleEl) roleEl.innerText = user.role || "N/A";
+}
+
+function borrowBook(bookId) {
+    alert("Borrowing book: " + bookId);
+    // TODO: Implement API call to borrow book
+}
+
+function returnBook(bookId) {
+    alert("Returning book: " + bookId);
+    // TODO: Implement API call to return book
+}
+
+// NAVIGATION HANDLERS
 
 links.forEach(link => {
     link.addEventListener("click", function(e) {
@@ -101,7 +161,6 @@ links.forEach(link => {
 
 // ========================================
 // LOGOUT HANDLER
-// ========================================
 
 function handleLogout(e) {
     e.preventDefault();
